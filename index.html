@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>分辨率榨汁机 - 免费在线图片降分辨率与压缩工具</title>
+  <meta name="description" content="免费在线图片降分辨率工具：批量缩小图片尺寸、压缩体积，支持 JPG/PNG/WebP 格式转换。全程在浏览器本地处理，图片不上传服务器，保护隐私。">
+  <meta name="keywords" content="图片压缩,图片降分辨率,图片缩小,批量压缩,在线工具,ImageSlim,图降降">
+  <meta property="og:title" content="图降降 ImageSlim - 免费图片降分辨率与压缩工具">
+  <meta property="og:description" content="批量降分辨率、压缩体积，本地处理不上传，保护隐私。">
+  <!-- 部署上线后，可把 og:image 换成工具的真实截图地址，方便分享到社交平台 -->
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='4' y='4' width='24' height='24' rx='6' fill='%231e293b'/%3E%3Ccircle cx='12' cy='12' r='2.5' fill='white'/%3E%3Cpath d='M7 24l6-6 4 4 4-5 4 4' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ============ 顶部导航 ============ -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="./" aria-label="图降降 ImageSlim 首页">
+        <svg class="brand-logo" viewBox="0 0 32 32" width="34" height="34" aria-hidden="true">
+          <rect x="4" y="4" width="24" height="24" rx="6" fill="url(#lg)"/>
+          <circle cx="12" cy="12" r="2.4" fill="#fff"/>
+          <path d="M7 24l6-6 4 4 4-5 4 4" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e293b"/><stop offset="1" stop-color="#475569"/></linearGradient></defs>
+        </svg>
+        <span class="brand-text">
+          <span class="brand-name">分辨率榨汁机 <em>ImageSlim</em></span>
+          <span class="brand-tag">免费 · 本地处理 · 保护隐私</span>
+        </span>
+      </a>
+      <!-- TODO: 注册 GitHub 后，把链接换成你的仓库地址 -->
+      <a class="btn-ghost" href="https://github.com/kamisama1145/image-slim" target="_blank" rel="noopener">GitHub 开源</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ 首屏介绍 ============ -->
+    <section class="hero">
+      <div class="container">
+        <h1 class="hero-title">图片太大？我榨死你！</h1>
+        <p class="hero-sub">拖入图片批量可榨。全程在浏览器本地完成，<strong>图片不会上传到任何服务器</strong>。</p>
+        <ul class="hero-points">
+          <li>批量处理</li>
+          <li>按比例 / 指定宽度</li>
+          <li>JPEG / WebP / PNG 转换</li>
+          <li>实时对比节省空间</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ 工具主体 ============ -->
+    <section class="workspace container">
+      <!-- 上传区 -->
+      <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="上传图片">
+        <svg viewBox="0 0 48 48" width="56" height="56" aria-hidden="true">
+          <rect x="6" y="6" width="36" height="36" rx="7" fill="none" stroke="#1e293b" stroke-width="2.5" stroke-dasharray="5 4"/>
+          <path d="M24 33V18M18 24l6-6 6 6" stroke="#1e293b" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p class="dz-title">拖拽图片到这里，或 <span class="link">点击选择文件</span></p>
+        <p class="dz-sub">支持 JPG / PNG / WebP / GIF / BMP，可一次选择多张</p>
+        <input type="file" id="fileInput" accept="image/*" multiple hidden>
+      </div>
+
+      <div class="panel-row">
+        <!-- 左侧：处理设置 -->
+        <aside class="panel">
+          <h2 class="panel-title">处理设置</h2>
+
+          <div class="form-group">
+            <label class="field-label">降分辨率模式</label>
+            <div class="segmented" id="modeSeg" role="tablist">
+              <button type="button" data-mode="percent" class="active" role="tab">按比例</button>
+              <button type="button" data-mode="width" role="tab">指定宽度</button>
+            </div>
+          </div>
+
+          <div class="form-group" id="percentGroup">
+            <label class="field-label">缩小比例</label>
+            <div class="preset-row" id="presetRow">
+              <button type="button" data-percent="25" class="preset">25%</button>
+              <button type="button" data-percent="50" class="preset active">50%</button>
+              <button type="button" data-percent="75" class="preset">75%</button>
+              <button type="button" data-percent="custom" class="preset">自定义</button>
+            </div>
+            <div class="custom-percent" id="customPercentWrap" hidden>
+              <input type="number" id="customPercent" min="1" max="100" value="60" aria-label="自定义缩小比例">
+              <span>%</span>
+            </div>
+          </div>
+
+          <div class="form-group" id="widthGroup" hidden>
+            <label class="field-label" for="targetWidth">目标宽度（像素，高度自动等比）</label>
+            <input type="number" id="targetWidth" min="1" max="10000" value="1920" placeholder="例如 1920">
+            <p class="hint">只缩小、不放大：若宽度大于原图，将保持原尺寸输出</p>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label" for="formatSelect">输出格式</label>
+            <select id="formatSelect">
+              <option value="keep" selected>保持原格式</option>
+              <option value="jpeg">JPEG（兼容性最好）</option>
+              <option value="webp">WebP（体积更小）</option>
+              <option value="png">PNG（无损）</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label" for="qualityRange">图片质量：<span id="qualityValue" class="quality-value">80</span></label>
+            <input type="range" id="qualityRange" min="10" max="100" value="80" step="1">
+            <p class="hint">仅对 JPEG / WebP 生效，PNG 为无损格式</p>
+          </div>
+
+          <div class="pro-teaser">
+            <span class="badge">PRO 规划中</span>
+            <span>按目标文件大小压缩 · 批量加水印 · AI 超清修复</span>
+          </div>
+
+          <div class="actions">
+            <button id="processBtn" class="btn-primary" type="button">开始处理</button>
+            <button id="clearBtn" class="btn-secondary" type="button">清空</button>
+          </div>
+
+          <div id="progressWrap" class="progress" hidden>
+            <div class="progress-bar"><div id="progressBar" class="progress-fill"></div></div>
+            <p id="progressText" class="progress-text">正在处理 0 / 0</p>
+          </div>
+        </aside>
+
+        <!-- 右侧：处理结果 -->
+        <section class="panel results-panel">
+          <h2 class="panel-title">处理结果 <span id="resultCount" class="count-badge">0 张</span></h2>
+          <div id="resultsEmpty" class="empty">还没有结果，先在上方添加图片吧</div>
+          <div id="resultsGrid" class="results-grid"></div>
+          <div class="results-actions" id="resultsActions" hidden>
+            <button id="downloadAllBtn" class="btn-primary" type="button">全部打包下载（ZIP）</button>
+            <p class="hint">若 ZIP 组件加载失败，会自动改为逐个下载</p>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ============ 常见问题 ============ -->
+    <section class="faq container">
+      <h2>常见问题</h2>
+      <details>
+        <summary>我的图片会上传到服务器吗？</summary>
+        <p>不会。所有处理都在你的浏览器本地完成（使用 HTML5 Canvas 技术），不需要任何服务器，可以放心处理证件照、隐私照片等敏感图片。</p>
+      </details>
+      <details>
+        <summary>支持哪些图片格式？</summary>
+        <p>支持 JPG、PNG、WebP、GIF、BMP。动图（GIF / 动画 WebP）会按静态画面处理；iPhone 的 HEIC 等系统相机格式暂不支持，请先转换成 JPG 再使用。</p>
+      </details>
+      <details>
+        <summary>降分辨率和压缩有什么区别？</summary>
+        <p>降分辨率是减少像素数量（例如 4000×3000 变成 2000×1500），直接让体积变小；压缩是降低存储质量（JPEG / WebP 的质量参数）。本工具两者都支持，组合使用效果最佳。</p>
+      </details>
+      <details>
+        <summary>为什么我的图片没有变小？</summary>
+        <p>当你设置的尺寸大于图片原始尺寸时，工具不会放大图片，会保持原图输出，所以大小不变。</p>
+      </details>
+    </section>
+  </main>
+
+  <!-- ============ 页脚 ============ -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>分辨率榨汁机 ImageSlim · 开源项目 · <a href="https://github.com/kamisama1145/image-slim" target="_blank" rel="noopener">GitHub 仓库</a> · MIT License</p>
+    </div>
+  </footer>
+
+  <!-- 轻提示 -->
+  <div id="toastWrap" class="toast-wrap" aria-live="polite"></div>
+
+  <!-- JSZip：用于"全部打包下载"，从公共 CDN 加载；加载失败会自动降级为逐个下载 -->
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
